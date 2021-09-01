@@ -7,7 +7,7 @@ import asyncHandler from "express-async-handler";
 // @access public
 export const registerUser = asyncHandler(async (req, res, next) => {
   const { name, email, password, google_recaptcha_token } = req.body;
-  await verify_google_reCaptcha(google_recaptcha_token, res);
+  // await verify_google_reCaptcha(google_recaptcha_token, res);
   const userExists = await User.findOne({ email }).exec();
   if (userExists) {
     res.status(400);
@@ -37,7 +37,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 // @access public
 export const authUser = asyncHandler(async (req, res) => {
   const { email, password, google_recaptcha_token } = req.body;
-  await verify_google_reCaptcha(google_recaptcha_token, res);
+  // await verify_google_reCaptcha(google_recaptcha_token, res);
   const user = await User.findOne({ email }).exec();
   if (user && (await user.matchPassword(password))) {
     return res.json({
