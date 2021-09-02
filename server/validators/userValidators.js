@@ -14,3 +14,7 @@ export const signinValidator = [
     .isLength({ min: 6 })
     .withMessage("Need strong password of minimum character 6"),
 ];
+
+export const profileValidator = [
+  check("name").not().isEmpty().withMessage("Name is required"),
+];

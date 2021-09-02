@@ -16,7 +16,7 @@ if (process.env.NODE_ENV == "development") {
 }
 
 //routes middleware
-app.use("/api/auth", authRoute);
+app.use("/api/users", authRoute);
 
 app.use(notFound);
 app.use(errorHandler);
