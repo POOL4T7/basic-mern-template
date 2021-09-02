@@ -46,7 +46,8 @@ const ProfileScreen = ({ history }) => {
         setValues({ ...values, name: user.name, email: user.email });
       }
     }
-  }, [dispatch, history, name, user, userInfo, values]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, history, user, userInfo]);
 
   const clickSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +55,10 @@ const ProfileScreen = ({ history }) => {
     if (password !== confirmPassword) {
       setValues({ ...values, message: "Password do not match" });
     } else {
-      dispatch(updateUserProfile({ _id: user._id, name, email, password }));
+      await dispatch(
+        updateUserProfile({ _id: user._id, name, email, password })
+      );
+      setValues({ ...values, buttonText: "Updated", buttonDisable: false });
     }
   };
 
