@@ -3,9 +3,9 @@ import { Container } from "react-bootstrap";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomeScreen from "./screens/HomeScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import LoginScreen from "./screens/LoginScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import RegisterScreen from "./screens/authScreens/RegisterScreen";
+import LoginScreen from "./screens/authScreens/LoginScreen";
+import ProfileScreen from "./screens/userScreens/ProfileScreen";
 import NotFound from "./screens/NotFound";
 
 function App() {

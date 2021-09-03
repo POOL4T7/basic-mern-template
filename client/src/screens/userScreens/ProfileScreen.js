@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import FormContainer from "../components/FormContainer";
-import Message from "../components/Message";
-import Loader from "../components/Loader";
-import { register } from "../actions/userActions";
+import Loader from "../../components/Loader";
+import Message from "../../components/Message";
+import { getUserDetails, updateUserProfile } from "../../actions/userActions";
 
-const RegisterScreen = ({ history, location }) => {
+const ProfileScreen = ({ history }) => {
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -17,6 +15,7 @@ const RegisterScreen = ({ history, location }) => {
     buttonDisable: false,
     message: "",
   });
+
   const {
     name,
     email,
@@ -26,20 +25,29 @@ const RegisterScreen = ({ history, location }) => {
     confirmPassword,
     message,
   } = values;
-
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
-  const redirect = location.search ? location.search.split("=")[1] : "/";
   const dispatch = useDispatch();
-  const userRegister = useSelector((state) => state.userRegister);
-  const { loading, error, userInfo } = userRegister;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading, error, user } = userDetails;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const userProfileUpdate = useSelector((state) => state.userProfileUpdate);
+  const { success, error: profileUpdateError } = userProfileUpdate;
 
   useEffect(() => {
-    if (userInfo) {
-      history.push(redirect);
+    if (!userInfo) {
+      history.push("/login");
+    } else {
+      if (!user.name) {
+        dispatch(getUserDetails("profile"));
+      } else {
+        setValues({ ...values, name: user.name, email: user.email });
+      }
     }
-  }, [history, redirect, userInfo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, history, user, userInfo]);
 
   const clickSubmit = async (e) => {
     e.preventDefault();
@@ -47,16 +55,24 @@ const RegisterScreen = ({ history, location }) => {
     if (password !== confirmPassword) {
       setValues({ ...values, message: "Password do not match" });
     } else {
-      await dispatch(register(name, email, password));
-      setValues({ ...values, buttonText: "Submitted", buttonDisable: false });
+      await dispatch(
+        updateUserProfile({ _id: user._id, name, email, password })
+      );
+      setValues({ ...values, buttonText: "Updated", buttonDisable: false });
     }
   };
 
   return (
-    <>
-      <FormContainer>
-        <h1>Sign Up</h1>
+    <Row>
+      <Col md={3}>
+        <h1>User Profile</h1>
         {message && <Message variant="danger">{message}</Message>}
+        {profileUpdateError && (
+          <Message variant="danger">{profileUpdateError}</Message>
+        )}
+        {success && (
+          <Message variant="success">Profile updated successfully</Message>
+        )}
         {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader />}
         <Form>
@@ -66,7 +82,6 @@ const RegisterScreen = ({ history, location }) => {
               type="text"
               placeholder="Enter full name"
               value={name}
-              autoFocus
               onChange={handleChange("name")}
             />
           </Form.Group>
@@ -77,6 +92,7 @@ const RegisterScreen = ({ history, location }) => {
               placeholder="Enter email"
               value={email}
               onChange={handleChange("email")}
+              disabled
             />
           </Form.Group>
 
@@ -107,17 +123,12 @@ const RegisterScreen = ({ history, location }) => {
             {buttonText}
           </Button>
         </Form>
-        <Row className="py-3">
-          <Col>
-          Already have an account ?{" "}
-            <Link to={redirect ? `/login?redirect?=${redirect}` : "/login"}>
-              Login
-            </Link>
-          </Col>
-        </Row>
-      </FormContainer>
-    </>
+      </Col>
+      <Col md={9} className="text-center ">
+        <h1>Show any thing </h1>
+      </Col>
+    </Row>
   );
 };
 
-export default RegisterScreen;
+export default ProfileScreen;

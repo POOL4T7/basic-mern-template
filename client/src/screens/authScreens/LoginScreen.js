@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import FormContainer from "../components/FormContainer";
-import Message from "../components/Message";
-import Loader from "../components/Loader";
-import { login } from "../actions/userActions";
+import FormContainer from "../../components/FormContainer";
+import Message from "../../components/Message";
+import Loader from "../../components/Loader";
+import { login } from "../../actions/userActions";
+import ReCaptcha from "../../components/ReCaptcha";
 
 const LoginScreen = ({ history, location }) => {
+  const recaptchaRef = createRef();
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -32,8 +34,9 @@ const LoginScreen = ({ history, location }) => {
 
   const clickSubmit = async (e) => {
     e.preventDefault();
+    const google_recaptcha_token = await recaptchaRef.current.executeAsync();
     setValues({ ...values, buttonText: "Submitting", buttonDisable: true });
-    await dispatch(login(email, password));
+    await dispatch(login(email, password, google_recaptcha_token));
     setValues({ ...values, buttonText: "Try again", buttonDisable: false });
   };
 
@@ -84,6 +87,7 @@ const LoginScreen = ({ history, location }) => {
           </Col>
         </Row>
       </FormContainer>
+      <ReCaptcha recaptchaRef={recaptchaRef} />
     </>
   );
 };

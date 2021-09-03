@@ -5,8 +5,8 @@ import asyncHandler from "express-async-handler";
 export const verify_google_reCaptcha = asyncHandler(async (token, res) => {
   if (token) {
     const googleVrifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`;
-    const response = await axios.post(googleVrifyUrl);
-    const { success } = response.data;
+    const { data } = await axios.post(googleVrifyUrl);
+    const { success } = data;
     if (!success) {
       res.status(400);
       throw new Error("Failed captcha verification");

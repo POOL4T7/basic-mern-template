@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
-import { getUserDetails, updateUserProfile } from "../actions/userActions";
+import FormContainer from "../../components/FormContainer";
+import Message from "../../components/Message";
+import Loader from "../../components/Loader";
+import { register } from "../../actions/userActions";
+import ReCaptcha from "../../components/ReCaptcha";
 
-const ProfileScreen = ({ history }) => {
+const RegisterScreen = ({ history, location }) => {
+  const recaptchaRef = createRef();
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -15,7 +19,6 @@ const ProfileScreen = ({ history }) => {
     buttonDisable: false,
     message: "",
   });
-
   const {
     name,
     email,
@@ -25,29 +28,20 @@ const ProfileScreen = ({ history }) => {
     confirmPassword,
     message,
   } = values;
+
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
+  const redirect = location.search ? location.search.split("=")[1] : "/";
   const dispatch = useDispatch();
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const userProfileUpdate = useSelector((state) => state.userProfileUpdate);
-  const { success, error: profileUpdateError } = userProfileUpdate;
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, error, userInfo } = userRegister;
 
   useEffect(() => {
-    if (!userInfo) {
-      history.push("/login");
-    } else {
-      if (!user.name) {
-        dispatch(getUserDetails("profile"));
-      } else {
-        setValues({ ...values, name: user.name, email: user.email });
-      }
+    if (userInfo) {
+      history.push(redirect);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, history, user, userInfo]);
+  }, [history, redirect, userInfo]);
 
   const clickSubmit = async (e) => {
     e.preventDefault();
@@ -55,24 +49,17 @@ const ProfileScreen = ({ history }) => {
     if (password !== confirmPassword) {
       setValues({ ...values, message: "Password do not match" });
     } else {
-      await dispatch(
-        updateUserProfile({ _id: user._id, name, email, password })
-      );
-      setValues({ ...values, buttonText: "Updated", buttonDisable: false });
+      const google_recaptcha_token = await recaptchaRef.current.executeAsync();
+      await dispatch(register(name, email, password, google_recaptcha_token));
+      setValues({ ...values, buttonText: "Submitted", buttonDisable: false });
     }
   };
 
   return (
-    <Row>
-      <Col md={3}>
-        <h1>User Profile</h1>
+    <>
+      <FormContainer>
+        <h1>Sign Up</h1>
         {message && <Message variant="danger">{message}</Message>}
-        {profileUpdateError && (
-          <Message variant="danger">{profileUpdateError}</Message>
-        )}
-        {success && (
-          <Message variant="success">Profile updated successfully</Message>
-        )}
         {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader />}
         <Form>
@@ -82,6 +69,7 @@ const ProfileScreen = ({ history }) => {
               type="text"
               placeholder="Enter full name"
               value={name}
+              autoFocus
               onChange={handleChange("name")}
             />
           </Form.Group>
@@ -92,7 +80,6 @@ const ProfileScreen = ({ history }) => {
               placeholder="Enter email"
               value={email}
               onChange={handleChange("email")}
-              disabled
             />
           </Form.Group>
 
@@ -123,12 +110,18 @@ const ProfileScreen = ({ history }) => {
             {buttonText}
           </Button>
         </Form>
-      </Col>
-      <Col md={9} className="text-center ">
-        <h1>Show any thing </h1>
-      </Col>
-    </Row>
+        <Row className="py-3">
+          <Col>
+            Already have an account ?{" "}
+            <Link to={redirect ? `/login?redirect?=${redirect}` : "/login"}>
+              Login
+            </Link>
+          </Col>
+        </Row>
+      </FormContainer>
+      <ReCaptcha recaptchaRef={recaptchaRef} />
+    </>
   );
 };
 
-export default ProfileScreen;
+export default RegisterScreen;
