@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
+import Logger from "../utils/Logger.js";
 
 export const runValidation = (req, res, next) => {
   const errors = validationResult(req);
@@ -24,7 +25,7 @@ export const protect = asyncHandler(async (req, res, next) => {
       req.user = await User.findOne({ _id: decode.id }).select("-password");
       next();
     } catch (error) {
-      console.log(error.message);
+      Logger.error(error.message);
       res.status(401);
       throw new Error("Invalid token");
     }
