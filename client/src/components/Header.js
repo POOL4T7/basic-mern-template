@@ -2,20 +2,21 @@ import React from "react";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../actions/userActions";
 
 const Header = () => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const logoutHandler = () => {
-    // dispatch(logout());
+    dispatch(logout());
   };
   return (
     <header>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>React-Shop</Navbar.Brand>
+            <Navbar.Brand>Templete</Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
@@ -24,7 +25,7 @@ const Header = () => {
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
               {userInfo ? (
-                <NavDropdown title={userInfo.name} id="username">
+                <NavDropdown title={userInfo.name.split(" ")[0]} id="username">
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>

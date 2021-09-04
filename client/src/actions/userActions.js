@@ -5,6 +5,7 @@ import {
   USER_LOGIN_SUCCESS,
   USER_LOGIN_REQUEST,
   USER_LOGIN_FAIL,
+  USER_LOGOUT,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
@@ -132,4 +133,9 @@ export const google_login = (tokenId) => async (dispatch) => {
           : error.message,
     });
   }
+};
+
+export const logout = () => async (dispatch) => {
+  localStorage.removeItem("userInfo");
+  dispatch({ type: USER_LOGOUT });
 };
