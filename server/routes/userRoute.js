@@ -5,6 +5,7 @@ import {
   registerUser,
   userProfile,
   updateUserProfile,
+  GoogleLogin,
 } from "../controllers/userController.js";
 import { runValidation, protect } from "../middlewares/authMiddleware.js";
 import {
@@ -23,4 +24,7 @@ router.put(
   protect,
   updateUserProfile
 );
+
+router.post("/google/user/login", GoogleLogin);
+
 export default router;

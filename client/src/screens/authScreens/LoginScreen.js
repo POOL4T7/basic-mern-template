@@ -7,6 +7,7 @@ import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { login } from "../../actions/userActions";
 import ReCaptcha from "../../components/ReCaptcha";
+import GoogleLoginButton from "../../components/GoogleLoginButton";
 
 const LoginScreen = ({ history, location }) => {
   const recaptchaRef = createRef();
@@ -25,6 +26,8 @@ const LoginScreen = ({ history, location }) => {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
+  const userGoogleLogin = useSelector((state) => state.userGoogleLogin);
+  const { error: googleLoginError } = userGoogleLogin;
 
   useEffect(() => {
     if (userInfo) {
@@ -43,9 +46,13 @@ const LoginScreen = ({ history, location }) => {
   return (
     <>
       <FormContainer>
-        <h1>Sign In</h1>
         {error && <Message variant="danger">{error}</Message>}
+        {googleLoginError && (
+          <Message variant="danger">{googleLoginError}</Message>
+        )}
         {loading && <Loader />}
+        <h1>Sign In</h1>
+        <GoogleLoginButton googleButtonText={"Login with Google"} />
         <Form>
           <Form.Group className="mb-3" controlId="email">
             <Form.Label>Email address</Form.Label>

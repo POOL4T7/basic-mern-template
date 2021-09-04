@@ -1,11 +1,13 @@
 import User from "../models/userModel.js";
 import { generateToken, verify_google_reCaptcha } from "../utils/Utils.js";
 import asyncHandler from "express-async-handler";
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_KEY);
 
 // @desc  POST register new user
 // @router POST /api/users
 // @access public
-export const registerUser = asyncHandler(async (req, res, next) => {
+export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, google_recaptcha_token } = req.body;
   await verify_google_reCaptcha(google_recaptcha_token, res);
   const userExists = await User.findOne({ email }).exec();
@@ -90,4 +92,41 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
   }
   res.status(404);
   throw new Error("User not found");
+});
+
+export const GoogleLogin = asyncHandler(async (req, res) => {
+  const idToken = req.body.idToken;
+  const { payload } = await client.verifyIdToken({
+    idToken,
+    audience: process.env.GOOGLE_LOGIN_CLIENT_KEY,
+  });
+  const { email_verified, name, email } = payload;
+  if (email_verified) {
+    const user = await User.findOne({ email }).exec();
+    if (user) {
+      const { _id, email, name, isAdmin } = user;
+      return res.json({
+        _id,
+        email,
+        name,
+        isAdmin,
+        token: generateToken(user._id),
+      });
+    } else {
+      let password = email + process.env.JWT_SECRET;
+      const newUser = await User.create({ name, email, password });
+      if (newUser) {
+        res.status(201).json({
+          _id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          isAdmin: newUser.isAdmin,
+          token: generateToken(newUser._id),
+        });
+      } else {
+        res.status(400);
+        throw new Error("Server Error, Try again after some time..");
+      }
+    }
+  }
 });

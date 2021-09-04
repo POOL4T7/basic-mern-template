@@ -7,6 +7,7 @@ import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { register } from "../../actions/userActions";
 import ReCaptcha from "../../components/ReCaptcha";
+import GoogleLoginButton from "../../components/GoogleLoginButton";
 
 const RegisterScreen = ({ history, location }) => {
   const recaptchaRef = createRef();
@@ -62,6 +63,7 @@ const RegisterScreen = ({ history, location }) => {
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader />}
+        <GoogleLoginButton googleButtonText={"Register with Google"} />
         <Form>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>

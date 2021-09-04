@@ -7,10 +7,12 @@ import {
   userLoginReducer,
   userDetailsReducer,
   userUpdateProfileReducer,
+  googleLoginReducer,
 } from "./reducers/userReducers";
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
+  userGoogleLogin: googleLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userProfileUpdate: userUpdateProfileReducer,
