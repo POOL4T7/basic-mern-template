@@ -8,6 +8,7 @@ import Loader from "../../components/Loader";
 import { register } from "../../actions/userActions";
 import ReCaptcha from "../../components/ReCaptcha";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
+import axios from "axios";
 
 const RegisterScreen = ({ history, location }) => {
   const recaptchaRef = createRef();
@@ -19,6 +20,7 @@ const RegisterScreen = ({ history, location }) => {
     buttonText: "Submit",
     buttonDisable: false,
     message: "",
+    emailError: "",
   });
   const {
     name,
@@ -28,6 +30,7 @@ const RegisterScreen = ({ history, location }) => {
     buttonDisable,
     confirmPassword,
     message,
+    emailError,
   } = values;
 
   const handleChange = (name) => (event) => {
@@ -46,13 +49,34 @@ const RegisterScreen = ({ history, location }) => {
 
   const clickSubmit = async (e) => {
     e.preventDefault();
+    const google_recaptcha_token = await recaptchaRef.current.executeAsync();
     setValues({ ...values, buttonText: "Submitting", buttonDisable: true });
     if (password !== confirmPassword) {
       setValues({ ...values, message: "Password do not match" });
     } else {
-      const google_recaptcha_token = await recaptchaRef.current.executeAsync();
-      await dispatch(register(name, email, password, google_recaptcha_token));
-      setValues({ ...values, buttonText: "Submitted", buttonDisable: false });
+      try {
+        const { data } = await axios.get(
+          `https://emailvalidation.abstractapi.com/v1/?api_key=${process.env.REACT_APP_ABSTRACT_API_KEY}&email=${email}`
+        );
+        console.log(data.is_smtp_valid && data.deliverability);
+        if (data.is_smtp_valid === true && data.quality_score > 0.5) {
+          await dispatch(
+            register(name, email, password, google_recaptcha_token)
+          );
+          setValues({
+            ...values,
+            buttonText: "Submitted",
+            buttonDisable: false,
+          });
+        } else {
+          setValues({
+            ...values,
+            emailError: "Bad Email Address,Eenter a valid one",
+          });
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
     }
   };
 
@@ -83,6 +107,7 @@ const RegisterScreen = ({ history, location }) => {
               value={email}
               onChange={handleChange("email")}
             />
+            <small style={{ color: "red" }}>{emailError}</small>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="password">
