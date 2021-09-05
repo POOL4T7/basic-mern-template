@@ -58,19 +58,23 @@ const RegisterScreen = ({ history, location }) => {
         const { data } = await axios.get(
           `https://emailvalidation.abstractapi.com/v1/?api_key=${process.env.REACT_APP_ABSTRACT_API_KEY}&email=${email}`
         );
-        console.log(data.is_smtp_valid && data.deliverability);
-        if (data.is_smtp_valid === true && data.quality_score > 0.5) {
+        if (
+          data.is_smtp_valid.text === "TRUE" &&
+          Number(data.quality_score) > 0.5
+        ) {
           await dispatch(
             register(name, email, password, google_recaptcha_token)
           );
           setValues({
             ...values,
-            buttonText: "Submitted",
+            buttonText: "Try again",
             buttonDisable: false,
           });
         } else {
           setValues({
             ...values,
+            buttonText: "Try again",
+            buttonDisable: false,
             emailError: "Bad Email Address,Eenter a valid one",
           });
         }

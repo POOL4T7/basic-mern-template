@@ -2,6 +2,7 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_REGISTER_RESET,
   USER_LOGIN_SUCCESS,
   USER_LOGIN_REQUEST,
   USER_LOGIN_FAIL,
@@ -15,6 +16,7 @@ import {
   USER_GOOGLE_LOGIN_REQUEST,
   USER_GOOGLE_LOGIN_SUCCESS,
   USER_GOOGLE_LOGIN_FAIL,
+  USER_LOGIN_RESET,
 } from "../constrants/userConstrants";
 import axios from "axios";
 import { Redirect } from "react-router";
@@ -40,6 +42,9 @@ export const register =
             ? error.response.data.message
             : error.message,
       });
+      setTimeout(() => {
+        dispatch({ type: USER_REGISTER_RESET });
+      }, 3000);
     }
   };
 
@@ -62,6 +67,9 @@ export const login =
             ? error.response.data.message
             : error.message,
       });
+      setTimeout(() => {
+        dispatch({ type: USER_LOGIN_RESET });
+      }, 3000);
     }
   };
 

@@ -6,6 +6,7 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_REGISTER_RESET,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
@@ -16,6 +17,8 @@ import {
   USER_GOOGLE_LOGIN_REQUEST,
   USER_GOOGLE_LOGIN_SUCCESS,
   USER_GOOGLE_LOGIN_FAIL,
+  USER_LOGIN_RESET,
+  USER_UPDATE_PROFILE_RESET,
 } from "../constrants/userConstrants";
 
 export const userRegisterReducer = (state = {}, action) => {
@@ -26,6 +29,8 @@ export const userRegisterReducer = (state = {}, action) => {
       return { loading: false, userInfo: action.payload };
     case USER_REGISTER_FAIL:
       return { loading: false, error: action.payload };
+    case USER_REGISTER_RESET:
+      return { loading: false, error: null };
     default:
       return state;
   }
@@ -39,6 +44,8 @@ export const userLoginReducer = (state = {}, action) => {
       return { loading: false, userInfo: action.payload };
     case USER_LOGIN_FAIL:
       return { loading: false, error: action.payload };
+    case USER_LOGIN_RESET:
+      return { loading: false, error: null };
     case USER_LOGOUT:
       return {};
     default:
@@ -71,6 +78,8 @@ export const userUpdateProfileReducer = (state = {}, action) => {
       return { loading: false, success: true, userInfo: action.payload };
     case USER_UPDATE_PROFILE_FAIL:
       return { loading: false, error: action.payload };
+    case USER_UPDATE_PROFILE_RESET:
+      return { loading: false, error: null, success: null };
     default:
       return state;
   }

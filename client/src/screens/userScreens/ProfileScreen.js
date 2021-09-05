@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getUserDetails, updateUserProfile } from "../../actions/userActions";
-
+import { USER_UPDATE_PROFILE_RESET } from "../../constrants/userConstrants";
 const ProfileScreen = ({ history }) => {
   const [values, setValues] = useState({
     name: "",
@@ -37,6 +37,11 @@ const ProfileScreen = ({ history }) => {
   const { success, error: profileUpdateError } = userProfileUpdate;
 
   useEffect(() => {
+    if (success || profileUpdateError) {
+      setTimeout(() => {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
+      }, 5000);
+    }
     if (!userInfo) {
       history.push("/login");
     } else {
@@ -47,7 +52,7 @@ const ProfileScreen = ({ history }) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, history, user, userInfo]);
+  }, [dispatch, history, profileUpdateError, success, user, userInfo]);
 
   const clickSubmit = async (e) => {
     e.preventDefault();

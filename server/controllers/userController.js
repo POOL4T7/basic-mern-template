@@ -94,6 +94,9 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
   throw new Error("User not found");
 });
 
+// @desc    Google Login
+// @router  POST /api/users//google/user/login
+// @access Public
 export const GoogleLogin = asyncHandler(async (req, res) => {
   const idToken = req.body.idToken;
   const { payload } = await client.verifyIdToken({
