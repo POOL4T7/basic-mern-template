@@ -5,9 +5,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import {
   userRegisterReducer,
   userLoginReducer,
+  googleLoginReducer,
+} from "./reducers/authReducers";
+
+import {
   userDetailsReducer,
   userUpdateProfileReducer,
-  googleLoginReducer,
 } from "./reducers/userReducers";
 
 const reducer = combineReducers({

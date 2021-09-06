@@ -36,12 +36,16 @@ npm run install-packages
 - MONGO_URL
 - JWT_SECRET
 - RECAPTCHA_SECRET_KEY (if you want to add google reCaptcha)
+- GOOGLE_LOGIN_CLIENT_KEY
+- GOOGLE_LOGIN_SECRET_KEY
 
 <br>
 
 > if you want to add google reCaptcha then make a another .env file in frontend folder and add your constant value
 
 - REACT_APP_RECAPTCHA_KEY
+- REACT_APP_GOOGLE_LOGIN_CLIENT_ID
+- REACT_APP_ABSTRACT_API_KEY
 
 <br>
 

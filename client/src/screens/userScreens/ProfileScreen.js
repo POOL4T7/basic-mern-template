@@ -5,6 +5,7 @@ import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { getUserDetails, updateUserProfile } from "../../actions/userActions";
 import { USER_UPDATE_PROFILE_RESET } from "../../constrants/userConstrants";
+
 const ProfileScreen = ({ history }) => {
   const [values, setValues] = useState({
     name: "",

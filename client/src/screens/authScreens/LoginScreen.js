@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../../components/FormContainer";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { login } from "../../actions/userActions";
+import { login } from "../../actions/authActions";
 import ReCaptcha from "../../components/ReCaptcha";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 

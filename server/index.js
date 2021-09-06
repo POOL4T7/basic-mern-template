@@ -4,7 +4,8 @@ import mongoDB from "./config/db.js";
 import morgan from "morgan";
 import Logger from "./utils/Logger.js";
 //import routes
-import authRoute from "./routes/userRoute.js";
+import authRoute from "./routes/authRoutes.js";
+import userRoute from "./routes/userRoutes.js";
 
 //import middlewares
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
@@ -17,7 +18,8 @@ if (process.env.NODE_ENV == "development") {
 }
 
 //routes middleware
-app.use("/api/users", authRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
 
 app.use(notFound);
 app.use(errorHandler);
