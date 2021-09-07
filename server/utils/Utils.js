@@ -26,6 +26,7 @@ export const returnUser = (user) => {
     name: user.name,
     email: user.email,
     isAdmin: user.isAdmin,
+    status: user.status,
     token: generateToken(user._id),
   };
 };

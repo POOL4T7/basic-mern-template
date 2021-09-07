@@ -34,7 +34,11 @@ export const authUser = asyncHandler(async (req, res) => {
   await verify_google_reCaptcha(google_recaptcha_token, res);
   const user = await User.findOne({ email }).exec();
   if (user && (await user.matchPassword(password))) {
-    return res.json(returnUser(user));
+    if (user.status === "active") {
+      return res.json(returnUser(user));
+    } else {
+      throw new Error(`Your account is ${user.status}`);
+    }
   }
   res.status(404);
   throw new Error("Invalid email or password");
@@ -54,7 +58,11 @@ export const GoogleLogin = asyncHandler(async (req, res) => {
   if (email_verified) {
     const user = await User.findOne({ email }).exec();
     if (user) {
-      return res.json(returnUser(user));
+      if (user.status === "active") {
+        return res.json(returnUser(user));
+      } else {
+        throw new Error(`Your account is ${user.status}`);
+      }
     } else {
       let password = email + process.env.JWT_SECRET;
       const newUser = await User.create({ name, email, password });

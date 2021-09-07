@@ -21,10 +21,14 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    status: {
+      type: String,
+      enum: ["active", "suspended", "blocked"],
+      default: "active",
+    },
   },
   { timestamps: true }
 );
-
 
 /**
  * Check if password matches the user's password
