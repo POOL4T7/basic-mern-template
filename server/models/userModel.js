@@ -25,6 +25,12 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+
+/**
+ * Check if password matches the user's password
+ * @param {string} password
+ * @returns {Promise<boolean>}
+ */
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

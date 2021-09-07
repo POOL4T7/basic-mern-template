@@ -1,5 +1,5 @@
 import User from "../models/userModel.js";
-import { generateToken } from "../utils/Utils.js";
+import { returnUser } from "../utils/Utils.js";
 import asyncHandler from "express-async-handler";
 
 /**
@@ -9,12 +9,7 @@ import asyncHandler from "express-async-handler";
 export const userProfile = asyncHandler(async (req, res) => {
   const user = await User.findById({ _id: req.user._id }).exec();
   if (user) {
-    return res.json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    });
+    return res.json(returnUser(user));
   }
   res.status(404);
   throw new Error("User not found");
@@ -32,13 +27,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       user.password = req.body.password;
     }
     const updateUser = await user.save();
-    return res.json({
-      _id: updateUser.id,
-      name: updateUser.name,
-      email: updateUser.email,
-      isAdmin: updateUser.isAdmin,
-      token: generateToken(updateUser._id),
-    });
+    return res.json(returnUser(updateUser));
   }
   res.status(404);
   throw new Error("User not found");

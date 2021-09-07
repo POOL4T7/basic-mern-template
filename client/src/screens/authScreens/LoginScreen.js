@@ -61,6 +61,7 @@ const LoginScreen = ({ history, location }) => {
               placeholder="Enter email"
               value={email}
               onChange={handleChange("email")}
+              autoFocus
             />
           </Form.Group>
 

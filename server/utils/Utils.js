@@ -19,3 +19,13 @@ export const verify_google_reCaptcha = asyncHandler(async (token, res) => {
 export const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
+
+export const returnUser = (user) => {
+  return {
+    _id: user.id,
+    name: user.name,
+    email: user.email,
+    isAdmin: user.isAdmin,
+    token: generateToken(user._id),
+  };
+};

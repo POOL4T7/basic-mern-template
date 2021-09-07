@@ -1,5 +1,5 @@
 import User from "../models/userModel.js";
-import { generateToken, verify_google_reCaptcha } from "../utils/Utils.js";
+import { verify_google_reCaptcha, returnUser } from "../utils/Utils.js";
 import asyncHandler from "express-async-handler";
 import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_KEY);
@@ -16,19 +16,9 @@ export const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("user already exists");
   }
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
+  const user = await User.create({ name, email, password });
   if (user) {
-    res.status(201).json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    });
+    res.status(201).json(registerUser(user));
   } else {
     res.status(400);
     throw new Error("invalid user data");
@@ -44,13 +34,7 @@ export const authUser = asyncHandler(async (req, res) => {
   await verify_google_reCaptcha(google_recaptcha_token, res);
   const user = await User.findOne({ email }).exec();
   if (user && (await user.matchPassword(password))) {
-    return res.json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    });
+    return res.json(returnUser(user));
   }
   res.status(404);
   throw new Error("Invalid email or password");
@@ -70,25 +54,12 @@ export const GoogleLogin = asyncHandler(async (req, res) => {
   if (email_verified) {
     const user = await User.findOne({ email }).exec();
     if (user) {
-      const { _id, email, name, isAdmin } = user;
-      return res.json({
-        _id,
-        email,
-        name,
-        isAdmin,
-        token: generateToken(user._id),
-      });
+      return res.json(returnUser(user));
     } else {
       let password = email + process.env.JWT_SECRET;
       const newUser = await User.create({ name, email, password });
       if (newUser) {
-        res.status(201).json({
-          _id: newUser.id,
-          name: newUser.name,
-          email: newUser.email,
-          isAdmin: newUser.isAdmin,
-          token: generateToken(newUser._id),
-        });
+        res.status(201).json(returnUser(newUser));
       } else {
         res.status(400);
         throw new Error("Server Error, Try again after some time..");
