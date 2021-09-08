@@ -8,6 +8,7 @@ import LoginScreen from "./screens/authScreens/LoginScreen";
 import ProfileScreen from "./screens/userScreens/ProfileScreen";
 import NotFound from "./screens/NotFound";
 import UserListScreen from "./screens/adminScreens/UserListScreen";
+import UserEditScreen from "./screens/adminScreens/UserEditScreen";
 
 function App() {
   return (
@@ -21,6 +22,11 @@ function App() {
             <Route path="/login" exact component={LoginScreen} />
             <Route path="/profile" exact component={ProfileScreen} />
             <Route path="/admin/userlist" exact component={UserListScreen} />
+            <Route
+              path="/admin/user/:id/edit"
+              exact
+              component={UserEditScreen}
+            />
             <Route path="/*" exact component={NotFound} />
           </Switch>
         </Container>
