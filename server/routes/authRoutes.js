@@ -11,9 +11,11 @@ import {
   signupValidator,
 } from "../validators/authValidators.js";
 
+/**
+ * @access("guest")
+ */
 router.post("/signup", signupValidator, runValidation, registerUser);
 router.post("/signin", signinValidator, runValidation, authUser);
-
 router.post("/google/user/login", GoogleLogin);
 
 export default router;
