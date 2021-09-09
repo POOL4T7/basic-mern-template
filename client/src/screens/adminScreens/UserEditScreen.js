@@ -8,7 +8,6 @@ import { getUserById } from "../../actions/userActions";
 import FormContainer from "../../components/FormContainer";
 import { USER_UPDATE_RESET } from "../../constrants/userConstrants";
 import { updateUser } from "../../actions/userActions";
-const accStatus = ["suspended", "active", "blocked"];
 
 const UserEditScreen = ({ match, history }) => {
   const userId = match.params.id;
@@ -94,12 +93,14 @@ const UserEditScreen = ({ match, history }) => {
             </Form.Group>
             <Form.Group className="mb-3" controlId="status">
               <Form.Label>Status</Form.Label>
-              <select className="form-select">
-                {accStatus.map((options) => (
-                  <option value={options} selected={status === options}>
-                    {options}
-                  </option>
-                ))}
+              <select
+                className="form-select"
+                onChange={handleChange("status")}
+                value={status}
+              >
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+                <option value="blocked">Blocked</option>
               </select>
             </Form.Group>
 

@@ -70,7 +70,8 @@ export const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    user.isAdmin = req.body.isAdmin;
+    user.isAdmin = req.body.isAdmin ? true : false;
+    user.status = req.body.status;
     const updateUser = await user.save();
 
     return res.json({

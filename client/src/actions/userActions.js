@@ -124,6 +124,9 @@ export const getUserById = (id) => async (dispatch, getState) => {
   }
 };
 
+/**
+ * @access("admin")
+ */
 export const updateUser = (user) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_UPDATE_REQUEST });
