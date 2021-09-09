@@ -7,7 +7,7 @@ import Message from "../../components/Message";
 import { getUserById } from "../../actions/userActions";
 import FormContainer from "../../components/FormContainer";
 import { USER_UPDATE_RESET } from "../../constrants/userConstrants";
-
+import { updateUser } from "../../actions/userActions";
 const accStatus = ["suspended", "active", "blocked"];
 
 const UserEditScreen = ({ match, history }) => {
@@ -56,6 +56,7 @@ const UserEditScreen = ({ match, history }) => {
 
   const submithandler = (e) => {
     e.preventDefault();
+    dispatch(updateUser({ _id: userId, name, status, isAdmin }));
   };
   return (
     <>
@@ -71,7 +72,7 @@ const UserEditScreen = ({ match, history }) => {
         ) : error ? (
           error && <Message variant="danger">{error}</Message>
         ) : (
-          <Form onSubmit={submithandler}>
+          <Form>
             <Form.Group className="mb-3" controlId="name">
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -110,7 +111,7 @@ const UserEditScreen = ({ match, history }) => {
                 onChange={handleChange("isAdmin")}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={submithandler}>
               Update
             </Button>
           </Form>
