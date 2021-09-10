@@ -85,19 +85,3 @@ export const updateUser = asyncHandler(async (req, res) => {
   throw new Error("User not found");
 });
 
-/**
- * @description("Delete user by Id")
- * @access("admin")
- * @method("POST")
- */
-export const deleteUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-  if (user) {
-    await user.remove();
-    res.status(201).json({
-      message: "User Deleted",
-    });
-  } else {
-    throw new Error("User Not Found");
-  }
-});

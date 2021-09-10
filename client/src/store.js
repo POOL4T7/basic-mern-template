@@ -9,7 +9,6 @@ import {
 } from "./reducers/authReducers";
 
 import {
-  userDeleteReducer,
   userDetailsReducer,
   userListReducer,
   userUpdateProfileReducer,
@@ -24,7 +23,6 @@ const reducer = combineReducers({
   userProfileUpdate: userUpdateProfileReducer,
   userList: userListReducer,
   userUpdate: userUpdateReducer,
-  userDelete: userDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

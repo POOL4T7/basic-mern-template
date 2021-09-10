@@ -26,9 +26,18 @@ const UserListScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo, deleteSuccess]);
 
-  const deleteUserHandler = (id) => {
-    window.confirm("Are you sure");
+  const statusColor = {
+    active: {
+      color: "green",
+    },
+    suspended: {
+      color: "#9F6000",
+    },
+    blocked: {
+      color: "red",
+    },
   };
+
   return (
     <>
       <h1>Users</h1>
@@ -43,6 +52,7 @@ const UserListScreen = ({ history }) => {
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Status</th>
               <th>Admin</th>
               <th></th>
             </tr>
@@ -54,6 +64,17 @@ const UserListScreen = ({ history }) => {
                 <td> {user.name} </td>
                 <td>
                   <a href={`mailto:${user.email}`}>{user.email}</a>{" "}
+                </td>
+                <td
+                  style={
+                    user.status === "active"
+                      ? statusColor.active
+                      : user.status === "suspended"
+                      ? statusColor.suspended
+                      : statusColor.blocked
+                  }
+                >
+                  {user.status}
                 </td>
                 <td>
                   {" "}
@@ -69,13 +90,6 @@ const UserListScreen = ({ history }) => {
                       <i className="fas fa-edit"></i>
                     </Button>
                   </LinkContainer>
-                  <Button
-                    variant="danger"
-                    className="btn-sm"
-                    onClick={() => deleteUserHandler(user._id)}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </Button>
                 </td>
               </tr>
             ))}

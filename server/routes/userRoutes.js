@@ -6,7 +6,6 @@ import {
   getUsersList,
   getUserById,
   updateUser,
-  deleteUser,
 } from "../controllers/userController.js";
 
 import {
@@ -35,6 +34,5 @@ router.get("/", protect, isAdmin, getUsersList);
 router.get("/:id", protect, isAdmin, getUserById);
 router.put("/:id", protect, isAdmin, updateUser);
 router.put("/:id", protect, isAdmin, updateUser);
-router.delete("/:id", protect, isAdmin, deleteUser);
 
 export default router;
