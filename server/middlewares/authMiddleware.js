@@ -1,11 +1,11 @@
-import { validationResult } from "express-validator";
-import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler";
-import User from "../models/userModel.js";
-import Logger from "../utils/Logger.js";
-import ApiError from "../utils/ApiError.js";
+const { validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
+const User = require("../models/userModel.js");
+const Logger = require("../utils/Logger.js");
+const ApiError = require("../utils/ApiError.js");
 
-export const runValidation = (req, res, next) => {
+exports.runValidation = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new ApiError(422, errors.array()[0].msg);
@@ -13,7 +13,7 @@ export const runValidation = (req, res, next) => {
   next();
 };
 
-export const protect = asyncHandler(async (req, res, next) => {
+exports.protect = asyncHandler(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -33,7 +33,7 @@ export const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-export const isAdmin = (req, res, next) => {
+exports.isAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {

@@ -1,15 +1,15 @@
-import express from "express";
-import dotenv from "dotenv";
-import mongoDB from "./config/db.js";
-import morgan from "morgan";
-import Logger from "./utils/Logger.js";
-import helmet from "helmet";
-//import routes
-import authRoute from "./routes/authRoutes.js";
-import userRoute from "./routes/userRoutes.js";
+const express = require("express");
+const dotenv = require("dotenv");
+const mongoDB = require("./config/db");
+const morgan = require("morgan");
+const Logger = require("./utils/Logger.js");
+const helmet = require("helmet");
+//const routes
+const authRoute = require("./routes/authRoutes.js");
+const userRoute = require("./routes/userRoutes.js");
 
-//import middlewares
-import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
+//const middlewares
+const { notFound, errorHandler } = require("./middlewares/errorMiddleware.js");
 dotenv.config();
 const app = express();
 mongoDB();

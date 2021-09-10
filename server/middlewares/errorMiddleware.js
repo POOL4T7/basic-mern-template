@@ -1,13 +1,13 @@
-import Logger from "../utils/Logger.js";
-import ApiError from "../utils/ApiError.js";
+const Logger = require("../utils/Logger.js");
+const ApiError = require("../utils/ApiError.js");
 
-export const notFound = (req, res, next) => {
+exports.notFound = (req, res, next) => {
   const error = new ApiError(400, `NOT FOUND ${req.originalUrl}`);
   Logger.error(error);
   next(error);
 };
 
-export const errorHandler = (err, req, res, next) => {
+exports.errorHandler = (err, req, res, next) => {
   let { statusCode, message } = err;
   if (process.env.NODE_ENV === "production" && !err.isOperational) {
     statusCode = 500;

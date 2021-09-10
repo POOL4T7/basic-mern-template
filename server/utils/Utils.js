@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken";
-import axios from "axios";
-import ApiError from "./ApiError.js";
+const jwt = require("jsonwebtoken");
+const axios = require("axios");
+const ApiError = require("./ApiError.js");
 
-export const verify_google_reCaptcha = async (token) => {
+exports.verify_google_reCaptcha = async (token) => {
   if (token) {
     const googleVrifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`;
     const { data } = await axios.post(googleVrifyUrl);
@@ -15,11 +15,11 @@ export const verify_google_reCaptcha = async (token) => {
   }
 };
 
-export const generateToken = (id) => {
+exports.generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
-export const returnUser = (user) => {
+exports.returnUser = (user) => {
   return {
     _id: user.id,
     name: user.name,

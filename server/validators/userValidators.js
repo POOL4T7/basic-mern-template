@@ -1,5 +1,5 @@
-import { check } from "express-validator";
+const { check } = require("express-validator");
 
-export const profileValidator = [
+exports.profileValidator = [
   check("name").not().isEmpty().withMessage("Name is required"),
 ];

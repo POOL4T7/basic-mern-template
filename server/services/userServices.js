@@ -1,6 +1,7 @@
-import User from "../models/userModel.js";
-import ApiError from "../utils/ApiError.js";
+const User = require("../models/userModel.js");
+const ApiError = require("../utils/ApiError.js");
+const { returnUser } = require("../utils/Utils.js");
 
-export const getUserByEmail = async (email) => {
+exports.getUserByEmail = async (email) => {
   return User.findOne({ email });
 };

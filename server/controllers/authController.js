@@ -1,18 +1,18 @@
-import User from "../models/userModel.js";
-import { verify_google_reCaptcha, returnUser } from "../utils/Utils.js";
-import asyncHandler from "express-async-handler";
-import { OAuth2Client } from "google-auth-library";
+const User = require("../models/userModel.js");
+const { verify_google_reCaptcha, returnUser } = require("../utils/Utils.js");
+const asyncHandler = require("express-async-handler");
+const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_KEY);
-import {
+const {
   createUser,
   loginUserWithEmailAndPassword,
-} from "../services/authServices.js";
+} = require("../services/authServices.js");
 
 /**
  * @description("register new  and return the user")
  * @access("guest")
  */
-export const registerUser = asyncHandler(async (req, res) => {
+exports.registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, google_recaptcha_token } = req.body;
   await verify_google_reCaptcha(google_recaptcha_token);
   const user = await createUser(name, email, password);
@@ -23,7 +23,7 @@ export const registerUser = asyncHandler(async (req, res) => {
  * @description("authenticate user and return user & token")
  * @access("guest")
  */
-export const authUser = asyncHandler(async (req, res) => {
+exports.authUser = asyncHandler(async (req, res) => {
   const { email, password, google_recaptcha_token } = req.body;
   await verify_google_reCaptcha(google_recaptcha_token, res);
   const user = await loginUserWithEmailAndPassword(email, password);
@@ -34,7 +34,7 @@ export const authUser = asyncHandler(async (req, res) => {
  * @description("register, authenticate and return user & token")
  * @access("guest")
  */
-export const GoogleLogin = asyncHandler(async (req, res) => {
+exports.GoogleLogin = asyncHandler(async (req, res) => {
   const idToken = req.body.idToken;
   const { payload } = await client.verifyIdToken({
     idToken,

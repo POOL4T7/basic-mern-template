@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "install-packages": "npm install && npm install --prefix client",
     "server": "nodemon server/index",

@@ -1,6 +1,6 @@
-import { check } from "express-validator";
+const { check } = require("express-validator");
 
-export const signupValidator = [
+exports.signupValidator = [
   check("name").not().isEmpty().withMessage("Name is required"),
   check("email").isEmail().withMessage("Email is required"),
   check("password")
@@ -8,7 +8,7 @@ export const signupValidator = [
     .withMessage("Need strong password of minimum character 6"),
 ];
 
-export const signinValidator = [
+exports.signinValidator = [
   check("email").isEmail().withMessage("Email is required"),
   check("password")
     .isLength({ min: 6 })

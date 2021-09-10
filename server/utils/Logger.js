@@ -1,5 +1,5 @@
-import chalk from "chalk";
-import ip from "ip";
+const chalk = require("chalk");
+const ip = require("ip");
 
 const divider = chalk.gray("\n-----------------------------------");
 
@@ -22,9 +22,7 @@ const Logger = {
   },
   dbConn: (host, error) => {
     if (host) {
-      console.log(
-        chalk.bold.bgBlue("Mongodb Connected, host:  ", host)
-      );
+      console.log(chalk.bold.bgBlue("Mongodb Connected, host:  ", host));
     } else {
       console.error(chalk.red(error));
     }
@@ -43,4 +41,4 @@ const Logger = {
   },
 };
 
-export default Logger;
+module.exports = Logger;

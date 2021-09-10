@@ -1,19 +1,19 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+const {
   userProfile,
   updateUserProfile,
   getUsersList,
   getUserById,
   updateUser,
-} from "../controllers/userController.js";
+} = require("../controllers/userController.js");
 
-import {
+const {
   runValidation,
   protect,
   isAdmin,
-} from "../middlewares/authMiddleware.js";
-import { profileValidator } from "../validators/userValidators.js";
+} = require("../middlewares/authMiddleware.js");
+const { profileValidator } = require("../validators/userValidators.js");
 
 /**
  * @access("user")
@@ -35,4 +35,4 @@ router.get("/:id", protect, isAdmin, getUserById);
 router.put("/:id", protect, isAdmin, updateUser);
 router.put("/:id", protect, isAdmin, updateUser);
 
-export default router;
+module.exports=router;

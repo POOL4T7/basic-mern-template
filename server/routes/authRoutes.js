@@ -1,15 +1,15 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+const {
   authUser,
   registerUser,
   GoogleLogin,
-} from "../controllers/authController.js";
-import { runValidation } from "../middlewares/authMiddleware.js";
-import {
+} = require("../controllers/authController.js");
+const { runValidation } = require("../middlewares/authMiddleware.js");
+const {
   signinValidator,
   signupValidator,
-} from "../validators/authValidators.js";
+} = require("../validators/authValidators.js");
 
 /**
  * @access("guest")
@@ -18,4 +18,4 @@ router.post("/signup", signupValidator, runValidation, registerUser);
 router.post("/signin", signinValidator, runValidation, authUser);
 router.post("/google/user/login", GoogleLogin);
 
-export default router;
+module.exports=router;
