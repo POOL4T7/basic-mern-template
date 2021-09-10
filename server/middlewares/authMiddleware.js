@@ -3,12 +3,12 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import Logger from "../utils/Logger.js";
+import ApiError from "../utils/ApiError.js";
 
 export const runValidation = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(422);
-    throw new Error(errors.array()[0].msg);
+    throw new ApiError(422, errors.array()[0].msg);
   }
   next();
 };
@@ -26,11 +26,10 @@ export const protect = asyncHandler(async (req, res, next) => {
       next();
     } catch (error) {
       Logger.error(error.message);
-      res.status(401);
-      throw new Error("Invalid token");
+      throw new ApiError(401, "Invalid token");
     }
   } else {
-    throw new Error("Not Authorized , invalid token");
+    throw new ApiError(401, "Not Authorized , invalid token");
   }
 });
 
@@ -39,6 +38,6 @@ export const isAdmin = (req, res, next) => {
     next();
   } else {
     res.status(401);
-    throw new Error("Not authorized as admin");
+    throw new ApiError(401, "Not authorized as admin");
   }
 };

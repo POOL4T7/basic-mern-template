@@ -1,19 +1,27 @@
 import Logger from "../utils/Logger.js";
+import ApiError from "../utils/ApiError.js";
 
 export const notFound = (req, res, next) => {
-  const error = new Error(`NOT FOUND ${req.originalUrl}`);
-  res.status(400);
+  const error = new ApiError(400, `NOT FOUND ${req.originalUrl}`);
   Logger.error(error);
   next(error);
 };
 
 export const errorHandler = (err, req, res, next) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  Logger.error(err.message);
-  Logger.error(process.env.NODE_ENV === "production" ? null : err.stack);
-  res.json({
-    message: err.message,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack,
-  });
+  let { statusCode, message } = err;
+  if (process.env.NODE_ENV === "production" && !err.isOperational) {
+    statusCode = 500;
+    message = "INTERNAL_SERVER_ERROR";
+  }
+
+  const response = {
+    message,
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  };
+
+  if (process.env.NODE_ENV === "development") {
+    Logger.warn(err);
+  }
+
+  res.status(statusCode).send(response);
 };

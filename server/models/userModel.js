@@ -30,11 +30,16 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  return !!user;
+};
+
 /**
  * Check if password matches the user's password
  * @param {string} password
  * @returns {Promise<boolean>}
- */
+ */ 
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

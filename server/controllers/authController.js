@@ -3,6 +3,10 @@ import { verify_google_reCaptcha, returnUser } from "../utils/Utils.js";
 import asyncHandler from "express-async-handler";
 import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_KEY);
+import {
+  createUser,
+  loginUserWithEmailAndPassword,
+} from "../services/authServices.js";
 
 /**
  * @description("register new  and return the user")
@@ -10,19 +14,9 @@ const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_KEY);
  */
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, google_recaptcha_token } = req.body;
-  await verify_google_reCaptcha(google_recaptcha_token, res);
-  const userExists = await User.findOne({ email }).exec();
-  if (userExists) {
-    res.status(400);
-    throw new Error("user already exists");
-  }
-  const user = await User.create({ name, email, password });
-  if (user) {
-    res.status(201).json(registerUser(user));
-  } else {
-    res.status(400);
-    throw new Error("invalid user data");
-  }
+  await verify_google_reCaptcha(google_recaptcha_token);
+  const user = await createUser(name, email, password);
+  return res.json(returnUser(user));
 });
 
 /**
@@ -32,16 +26,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const authUser = asyncHandler(async (req, res) => {
   const { email, password, google_recaptcha_token } = req.body;
   await verify_google_reCaptcha(google_recaptcha_token, res);
-  const user = await User.findOne({ email }).exec();
-  if (user && (await user.matchPassword(password))) {
-    if (user.status === "active") {
-      return res.json(returnUser(user));
-    } else {
-      throw new Error(`Your account is ${user.status}`);
-    }
-  }
-  res.status(404);
-  throw new Error("Invalid email or password");
+  const user = await loginUserWithEmailAndPassword(email, password);
+  return res.json(user);
 });
 
 /**
