@@ -1,6 +1,6 @@
 const User = require("../models/userModel.js");
 const ApiError = require("../utils/ApiError.js");
-const { returnUser } = require("../utils/Utils.js");
+const { returnUserWithToken } = require("../utils/Utils.js");
 
 /**
  * @description("create new user")
@@ -23,7 +23,7 @@ exports.loginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(401, "Incorrect email or password");
   }
   if (user.status === "active") {
-    return returnUser(user);
+    return returnUserWithToken(user);
   }
   throw new ApiError(400, `Your account is ${user.status}`);
 };

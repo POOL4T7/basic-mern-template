@@ -12,8 +12,6 @@ const UserListScreen = ({ history }) => {
   const { loading, error, users } = userList;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  const userDelete = useSelector((state) => state.userDelete);
-  const { success: deleteSuccess } = userDelete;
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers());
@@ -24,7 +22,7 @@ const UserListScreen = ({ history }) => {
         history.push("/login");
       }
     }
-  }, [dispatch, history, userInfo, deleteSuccess]);
+  }, [dispatch, history, userInfo]);
 
   const statusColor = {
     active: {

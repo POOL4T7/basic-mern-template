@@ -12,7 +12,7 @@ const ProfileScreen = ({ history }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    buttonText: "Submit",
+    buttonText: "Update",
     buttonDisable: false,
     message: "",
   });
@@ -41,7 +41,7 @@ const ProfileScreen = ({ history }) => {
     if (success || profileUpdateError) {
       setTimeout(() => {
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
-      }, 5000);
+      }, 3000);
     }
     if (!userInfo) {
       history.push("/login");
@@ -57,7 +57,7 @@ const ProfileScreen = ({ history }) => {
 
   const clickSubmit = async (e) => {
     e.preventDefault();
-    setValues({ ...values, buttonText: "Submitting", buttonDisable: true });
+    setValues({ ...values, buttonText: "Updating", buttonDisable: true });
     if (password !== confirmPassword) {
       setValues({ ...values, message: "Password do not match" });
     } else {
