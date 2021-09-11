@@ -15,11 +15,7 @@ exports.verify_google_reCaptcha = async (token) => {
   }
 };
 
-exports.generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
-};
-
-exports.returnUser = (user) => {
+exports.returnUserWithToken = (user) => {
   return {
     _id: user.id,
     name: user.name,
@@ -28,4 +24,8 @@ exports.returnUser = (user) => {
     status: user.status,
     token: generateToken(user._id),
   };
+};
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Logger = require("../utils/Logger.js");
+const { Logger } = require("../utils");
 
 const connectDB = async () => {
   try {

@@ -29,7 +29,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
       throw new ApiError(401, "Invalid token");
     }
   } else {
-    throw new ApiError(401, "Not Authorized , invalid token");
+    throw new ApiError(401, "Not Authorized, invalid token");
   }
 });
 

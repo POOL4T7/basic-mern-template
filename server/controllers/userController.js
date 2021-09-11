@@ -1,6 +1,6 @@
-const User = require("../models/userModel.js");
-const { returnUser } = require("../utils/Utils.js");
 const asyncHandler = require("express-async-handler");
+const User = require("../models/userModel.js");
+const { Utils, Logger } = require("../utils");
 
 /**
  * @description("Get logged in user profile")
@@ -10,7 +10,7 @@ const asyncHandler = require("express-async-handler");
 exports.userProfile = asyncHandler(async (req, res) => {
   const user = await User.findById({ _id: req.user._id }).exec();
   if (user) {
-    return res.json(returnUser(user));
+    return res.json(Utils.returnUserWithToken(user));
   }
   res.status(404);
   throw new Error("User not found");
@@ -29,7 +29,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
       user.password = req.body.password;
     }
     const updateUser = await user.save();
-    return res.json(returnUser(updateUser));
+    return res.json(Utils.returnUserWithToken(updateUser));
   }
   res.status(404);
   throw new Error("User not found");

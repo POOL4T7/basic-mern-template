@@ -1,7 +1,6 @@
 const User = require("../models/userModel.js");
 const ApiError = require("../utils/ApiError.js");
 const { returnUser } = require("../utils/Utils.js");
-const { getUserByEmail } = require("./userServices.js");
 
 /**
  * @description("create new user")
@@ -19,7 +18,7 @@ exports.createUser = async (name, email, password) => {
  * @returns {Promise<User>}
  */
 exports.loginUserWithEmailAndPassword = async (email, password) => {
-  const user = await getUserByEmail(email);
+  const user = await User.findOne({ email }).exec();
   if (!user || !(await user.matchPassword(password))) {
     throw new ApiError(401, "Incorrect email or password");
   }

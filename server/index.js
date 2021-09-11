@@ -2,14 +2,14 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoDB = require("./config/db");
 const morgan = require("morgan");
-const Logger = require("./utils/Logger.js");
 const helmet = require("helmet");
-//const routes
-const authRoute = require("./routes/authRoutes.js");
-const userRoute = require("./routes/userRoutes.js");
+const { Logger } = require("./utils");
 
-//const middlewares
-const { notFound, errorHandler } = require("./middlewares/errorMiddleware.js");
+//import routes
+const { authRoutes, userRoutes } = require("./routes");
+
+//import middlewares
+const { errorMiddleware } = require("./middlewares");
 dotenv.config();
 const app = express();
 mongoDB();
@@ -23,11 +23,11 @@ if (process.env.NODE_ENV == "development") {
 }
 
 //routes middleware
-app.use("/api/auth", authRoute);
-app.use("/api/users", userRoute);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
+app.use(errorMiddleware.notFound);
+app.use(errorMiddleware.errorHandler);
 
 const port = process.env.PORT || 5000;
 

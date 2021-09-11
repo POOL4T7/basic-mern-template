@@ -1,38 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const {
-  userProfile,
-  updateUserProfile,
-  getUsersList,
-  getUserById,
-  updateUser,
-} = require("../controllers/userController.js");
-
-const {
-  runValidation,
-  protect,
-  isAdmin,
-} = require("../middlewares/authMiddleware.js");
-const { profileValidator } = require("../validators/userValidators.js");
+const { userController } = require("../controllers");
+const { authMiddleware } = require("../middlewares");
+const { uservalidators } = require("../validators");
 
 /**
  * @access("user")
  */
-router.get("/profile", protect, userProfile);
+router.get("/profile", authMiddleware.protect, userController.userProfile);
 router.put(
   "/profile",
-  profileValidator,
-  runValidation,
-  protect,
-  updateUserProfile
+  uservalidators.profileValidator,
+  authMiddleware.runValidation,
+  authMiddleware.protect,
+  userController.updateUserProfile
 );
 
 /**
  * @access("admin")
  */
-router.get("/", protect, isAdmin, getUsersList);
-router.get("/:id", protect, isAdmin, getUserById);
-router.put("/:id", protect, isAdmin, updateUser);
-router.put("/:id", protect, isAdmin, updateUser);
+router.get(
+  "/",
+  authMiddleware.protect,
+  authMiddleware.isAdmin,
+  userController.getUsersList
+);
+router.get(
+  "/:id",
+  authMiddleware.protect,
+  authMiddleware.isAdmin,
+  userController.getUserById
+);
+router.put(
+  "/:id",
+  authMiddleware.protect,
+  authMiddleware.isAdmin,
+  userController.updateUser
+);
+router.put(
+  "/:id",
+  authMiddleware.protect,
+  authMiddleware.isAdmin,
+  userController.updateUser
+);
 
-module.exports=router;
+module.exports = router;
