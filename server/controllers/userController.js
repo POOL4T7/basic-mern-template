@@ -5,7 +5,6 @@ const { Utils, Logger } = require("../utils");
 /**
  * @description("Get logged in user profile")
  * @access("user")
- * @method("GET")
  */
 exports.userProfile = asyncHandler(async (req, res) => {
   const user = await User.findById({ _id: req.user._id }).exec();
@@ -19,7 +18,6 @@ exports.userProfile = asyncHandler(async (req, res) => {
 /**
  * @description("Update and return logged in user profile")
  * @access("user")
- * @method("POST")
  */
 exports.updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById({ _id: req.user._id }).exec();
@@ -38,7 +36,6 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 /**
  * @description("Get user's list")
  * @access("admin")
- * @method("GET")
  */
 exports.getUsersList = asyncHandler(async (req, res) => {
   const users = await User.find({}).exec();
@@ -48,7 +45,6 @@ exports.getUsersList = asyncHandler(async (req, res) => {
 /**
  * @description("Get user by Id")
  * @access("admin")
- * @method("GET")
  */
 exports.getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select("-password");
@@ -63,7 +59,6 @@ exports.getUserById = asyncHandler(async (req, res) => {
 /**
  * @description("Update user by Id")
  * @access("admin")
- * @method("POST")
  */
 exports.updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);

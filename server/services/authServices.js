@@ -14,7 +14,7 @@ exports.createUser = async (name, email, password) => {
 };
 
 /**
- * @description("Login with username and password")
+ * @description("Login with email and password")
  * @returns {Promise<User>}
  */
 exports.loginUserWithEmailAndPassword = async (email, password) => {
