@@ -3,7 +3,7 @@ import GoogleLogin from "react-google-login";
 import { google_login } from "../actions/authActions";
 import { useDispatch } from "react-redux";
 
-const GoogleLoginButton = ({googleButtonText}) => {
+const GoogleLoginButton = ({ googleButtonText }) => {
   const dispatch = useDispatch();
   const responseGoogle = async (response) => {
     if (response.tokenId) {

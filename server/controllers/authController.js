@@ -1,9 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { User } = require("../models");
 const { authServices } = require("../services/");
-const { Utils } = require("../utils");
-const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_KEY);
+const { Utils, ApiError } = require("../utils");
 
 /**
  * @description("register new  and return the user")
@@ -36,28 +34,21 @@ exports.authUser = asyncHandler(async (req, res) => {
  */
 exports.GoogleLogin = asyncHandler(async (req, res) => {
   const idToken = req.body.idToken;
-  const { payload } = await client.verifyIdToken({
-    idToken,
-    audience: process.env.GOOGLE_LOGIN_CLIENT_KEY,
-  });
-  const { email_verified, name, email } = payload;
+  const { email_verified, name, email } = await authServices.verifyGoogleIdToken(
+    idToken
+  );
   if (email_verified) {
     const user = await User.findOne({ email }).exec();
     if (user) {
       if (user.status === "active") {
         return res.json(returnUserWithToken(user));
       } else {
-        throw new Error(`Your account is ${user.status}`);
+        throw new ApiError(401, `Your account is ${user.status}`);
       }
     } else {
       let password = email + process.env.JWT_SECRET;
-      const newUser = await User.create({ name, email, password });
-      if (newUser) {
-        res.status(201).json(returnUserWithToken(newUser));
-      } else {
-        res.status(400);
-        throw new Error("Server Error, Try again after some time..");
-      }
+      const user = await authServices.createUser(name, email, password);
+      return res.json(Utils.returnUserWithToken(user));
     }
   }
 });

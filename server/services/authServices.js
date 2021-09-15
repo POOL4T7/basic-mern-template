@@ -1,6 +1,8 @@
 const User = require("../models/userModel.js");
 const ApiError = require("../utils/ApiError.js");
 const { returnUserWithToken } = require("../utils/Utils.js");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_KEY);
 
 /**
  * @description("create new user")
@@ -26,4 +28,16 @@ exports.loginUserWithEmailAndPassword = async (email, password) => {
     return returnUserWithToken(user);
   }
   throw new ApiError(400, `Your account is ${user.status}`);
+};
+
+/**
+ * @description("verify idToken")
+ * @returns { email_verified, name, email,picture }
+ */
+exports.verifyGoogleIdToken = async (idToken) => {
+  const { payload } = await client.verifyIdToken({
+    idToken,
+    audience: process.env.GOOGLE_LOGIN_CLIENT_KEY,
+  });
+  return payload;
 };
