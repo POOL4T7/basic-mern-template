@@ -26,6 +26,16 @@ exports.returnUserWithToken = (user) => {
   };
 };
 
+exports.returnUserWithoutToken = (user) => {
+  return {
+    _id: user.id,
+    name: user.name,
+    email: user.email,
+    isAdmin: user.isAdmin,
+    status: user.status,
+  };
+};
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };

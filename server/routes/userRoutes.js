@@ -29,7 +29,7 @@ router.get(
   "/:id",
   authMiddleware.protect,
   authMiddleware.isAdmin,
-  userController.getUserById
+  userController.getUserDetailsById
 );
 router.put(
   "/:id",

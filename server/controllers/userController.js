@@ -1,18 +1,18 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel.js");
-const { Utils, Logger } = require("../utils");
+const { User } = require("../models");
+const { Utils, Logger, ApiError } = require("../utils");
+const { userServices } = require("../services");
 
 /**
  * @description("Get logged in user profile")
  * @access("user")
  */
 exports.userProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById({ _id: req.user._id }).exec();
+  const user = await userServices.getUserById(req.user._id);
   if (user) {
-    return res.json(Utils.returnUserWithToken(user));
+    return res.json(Utils.returnUserWithoutToken(user));
   }
-  res.status(404);
-  throw new Error("User not found");
+  throw new ApiError(404, "User not found");
 });
 
 /**
@@ -20,17 +20,14 @@ exports.userProfile = asyncHandler(async (req, res) => {
  * @access("user")
  */
 exports.updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById({ _id: req.user._id }).exec();
-  if (user) {
-    user.name = req.body.name || user.name;
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
-    const updateUser = await user.save();
-    return res.json(Utils.returnUserWithToken(updateUser));
-  }
-  res.status(404);
-  throw new Error("User not found");
+  const { name, password } = req.body;
+  const userId = req.user._id;
+  const data = await userServices.updateLoggedInUserProfile(
+    userId,
+    name,
+    password
+  );
+  return res.json(data);
 });
 
 /**
@@ -46,13 +43,12 @@ exports.getUsersList = asyncHandler(async (req, res) => {
  * @description("Get user by Id")
  * @access("admin")
  */
-exports.getUserById = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select("-password");
+exports.getUserDetailsById = asyncHandler(async (req, res) => {
+  const user = await userServices.getUserById(req.params.id);
   if (user) {
-    res.json(user);
+    res.json(Utils.returnUserWithoutToken(user));
   } else {
-    res.status(400);
-    throw new Error("User Not Found");
+    throw new ApiError(404, "User not found");
   }
 });
 
@@ -61,21 +57,8 @@ exports.getUserById = asyncHandler(async (req, res) => {
  * @access("admin")
  */
 exports.updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-  if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.isAdmin = req.body.isAdmin ? true : false;
-    user.status = req.body.status;
-    const updateUser = await user.save();
-
-    return res.json({
-      _id: updateUser.id,
-      name: updateUser.name,
-      email: updateUser.email,
-      isAdmin: updateUser.isAdmin,
-    });
-  }
-  res.status(404);
-  throw new Error("User not found");
+  const { name, status, isAdmin } = req.body;
+  const userId = req.params.id;
+  const data = await userServices.updateUserInfo(userId, name, status, isAdmin);
+  res.json(data);
 });
