@@ -2,7 +2,6 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoDB = require("./config/db");
 const morgan = require("morgan");
-const helmet = require("helmet");
 const { Logger } = require("./utils");
 
 //import routes
@@ -13,9 +12,6 @@ const { errorMiddleware } = require("./middlewares");
 dotenv.config();
 const app = express();
 mongoDB();
-
-// set security HTTP headers
-app.use(helmet());
 
 app.use(express.json());
 if (process.env.NODE_ENV == "development") {

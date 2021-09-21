@@ -1,5 +1,4 @@
 const chalk = require("chalk");
-const ip = require("ip");
 
 const divider = chalk.gray("\n-----------------------------------");
 
@@ -34,9 +33,7 @@ const Logger = {
     console.log(`
         ${chalk.bold("Access URLs:")}${divider}
           Localhost: ${chalk.magenta(`http://${host}:${port}`)}
-         LAN: ${chalk.magenta(
-           `http://${ip.address()}:${port}`
-         )}${divider}${chalk.blue(`Press ${chalk.italic("CTRL-C")} to stop`)}
+         ${divider}${chalk.blue(`Press ${chalk.italic("CTRL-C")} to stop`)}
     `);
   },
 };
