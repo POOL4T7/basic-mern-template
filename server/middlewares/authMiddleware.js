@@ -26,7 +26,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
       next();
     } catch (error) {
       Logger.error(error.message);
-      throw new ApiError(401, "Invalid token");
+      throw new ApiError(403, "Invalid token");
     }
   } else {
     throw new ApiError(401, "Not Authorized, invalid token");

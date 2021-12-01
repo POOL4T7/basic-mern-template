@@ -8,11 +8,15 @@ const { userServices } = require("../services");
  * @access("user")
  */
 exports.userProfile = asyncHandler(async (req, res) => {
-  const user = await userServices.getUserById(req.user._id);
-  if (user) {
-    return res.json(Utils.returnUserWithoutToken(user));
+  try {
+    const user = await userServices.getUserById(req.user._id);
+    if (user) {
+      return res.json(Utils.returnUserWithoutToken(user));
+    }
+    throw new ApiError(404, "User not found");
+  } catch (e) {
+    return res.status(500).json(e.message);
   }
-  throw new ApiError(404, "User not found");
 });
 
 /**
@@ -20,14 +24,18 @@ exports.userProfile = asyncHandler(async (req, res) => {
  * @access("user")
  */
 exports.updateUserProfile = asyncHandler(async (req, res) => {
-  const { name, password } = req.body;
-  const userId = req.user._id;
-  const data = await userServices.updateLoggedInUserProfile(
-    userId,
-    name,
-    password
-  );
-  return res.json(data);
+  try {
+    const { name, password } = req.body;
+    const userId = req.user._id;
+    const data = await userServices.updateLoggedInUserProfile(
+      userId,
+      name,
+      password
+    );
+    return res.json(data);
+  } catch (e) {
+    return res.status(500).json(e.message);
+  }
 });
 
 /**
@@ -35,8 +43,12 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
  * @access("admin")
  */
 exports.getUsersList = asyncHandler(async (req, res) => {
-  const users = await User.find({}).exec();
-  res.json(users);
+  try {
+    const users = await User.find({}).exec();
+    res.json(users);
+  } catch (e) {
+    return res.status(500).json(e.message);
+  }
 });
 
 /**
@@ -44,11 +56,15 @@ exports.getUsersList = asyncHandler(async (req, res) => {
  * @access("admin")
  */
 exports.getUserDetailsById = asyncHandler(async (req, res) => {
-  const user = await userServices.getUserById(req.params.id);
-  if (user) {
-    res.json(Utils.returnUserWithoutToken(user));
-  } else {
-    throw new ApiError(404, "User not found");
+  try {
+    const user = await userServices.getUserById(req.params.id);
+    if (user) {
+      res.json(Utils.returnUserWithoutToken(user));
+    } else {
+      throw new ApiError(404, "User not found");
+    }
+  } catch (error) {
+    return res.status(500).json(e.message);
   }
 });
 
@@ -57,8 +73,17 @@ exports.getUserDetailsById = asyncHandler(async (req, res) => {
  * @access("admin")
  */
 exports.updateUser = asyncHandler(async (req, res) => {
-  const { name, status, isAdmin } = req.body;
-  const userId = req.params.id;
-  const data = await userServices.updateUserInfo(userId, name, status, isAdmin);
-  res.json(data);
+  try {
+    const { name, status, isAdmin } = req.body;
+    const userId = req.params.id;
+    const data = await userServices.updateUserInfo(
+      userId,
+      name,
+      status,
+      isAdmin
+    );
+    return res.json(data);
+  } catch (e) {
+    return res.status(500).json(e.message);
+  }
 });
